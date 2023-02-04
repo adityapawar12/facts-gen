@@ -14,6 +14,8 @@ import {
 import { RxReset } from "react-icons/rx";
 import { AiOutlineBgColors } from "react-icons/ai";
 import { IoIosArrowBack } from "react-icons/io";
+import SharedComponents from "../SharedComponents";
+import styles from "./index.module.css";
 // import Hammer from "hammerjs";
 
 const width = 1080;
@@ -30,15 +32,20 @@ let historyStep = 0;
 const DogFacts = () => {
   const stageRef: any = useRef(null);
   const fullRef: any = useRef(null);
-  const [position, setPosition] = useState(history[0]);
-  const [backgroundColor, setBackgroundColor] = useState("#2C3333");
+  const textRef: any = React.useRef();
+  const trRef: any = React.useRef();
   const [text, setText] = useState<string>("");
   const [fact, setFact] = useState<string>("");
   const [imageFormat, setImageFormat] = useState<string>("jpeg");
   const [zoom, setZoom] = useState<number>(1);
+  const [position, setPosition] = useState(history[0]);
+  const [isSelected, setIsSelected] = useState<boolean>(false);
   const [showSettings, setShowSettings] = useState<boolean>(false);
-  const [color, setColor] = useState("#fff");
-  const [showColorPicker, setShowColorPicker] = useState(false);
+  const [backgroundColor, setBackgroundColor] = useState<string>("#FFF");
+  const [showBackgroundColorPicker, setShowBackgroundColorPicker] =
+    useState<boolean>(false);
+  const [color, setColor] = useState<string>("#000");
+  const [showColorPicker, setShowColorPicker] = useState<boolean>(false);
 
   const handleZoomIn = () => {
     setZoom(Number((zoom + 0.05).toFixed(2)));
@@ -105,18 +112,17 @@ const DogFacts = () => {
     axios
       .get("https://dogapi.dog/api/facts")
       .then((res) => {
-        console.log(res.data);
         return res.data;
       })
       .then((res: any) => {
-        console.log(res.facts);
         setFact(res.facts[0]);
         setText(res.facts[0]);
       });
   };
-  const textRef: any = React.useRef();
-  const trRef: any = React.useRef();
-  const [isSelected, setIsSelected] = useState<boolean>(false);
+
+  useEffect(() => {
+    generateFact();
+  }, []);
 
   useEffect(() => {
     if (isSelected) {
@@ -130,31 +136,18 @@ const DogFacts = () => {
     setIsSelected((prevIsSelected) => !prevIsSelected);
   };
 
-  useEffect(() => {
-    console.log("showSettings");
-  }, [showSettings]);
-
-  // useEffect(() => {
-  //   const handleWindowResize = () => {
-  //     console.log(window.innerWidth);
-  //     return;
-  //   };
-
-  //   window.addEventListener("resize", handleWindowResize);
-  //   return () => {
-  //     window.removeEventListener("resize", handleWindowResize);
-  //   };
-  // }, []);
-
   return (
     <div className={`overflow-hidden relative`}>
+      <SharedComponents showLightDarkComp={true} />
       <div
         id="fullDiv"
         ref={fullRef}
         className={`flex justify-center align-middle items-center`}
       >
-        <div className={`basis-full bg-white flex justify-center items-center`}>
-          <div className={`h-screen overflow-y-scroll`}>
+        <div
+          className={`basis-full flex justify-center items-center bg-gray-800`}
+        >
+          <div className={`h-screen overflow-y-scroll ${styles.scroll}`}>
             <Stage
               width={width}
               height={height}
@@ -178,7 +171,7 @@ const DogFacts = () => {
                     // onBlur={handleTextChange}
                     onBlur={(e: any) => setText(e.target.value)}
                     fontFamily={`Calibri`}
-                    fill={`white`}
+                    fill={color}
                     align={`center`}
                     verticalAlign={`middle`}
                     draggable={true}
@@ -216,69 +209,87 @@ const DogFacts = () => {
       <div
         className={`absolute m-2 w-28 left-0 top-0 h-screen flex flex-col justify-start items-center`}
       >
-        <div className={`px-0 py-2 mb-2 bg-slate-800 text-white w-28 rounded`}>
+        <div
+          onClick={() => {
+            setShowColorPicker((prevShowColorPicker) => !prevShowColorPicker);
+          }}
+          className={`px-0 py-2 mb-2 bg-slate-800 text-white w-28 rounded shadow-lg shadow-slate-900 text-center border border-slate-900`}
+        >
+          <div className={`text-center`}>Color</div>
+          <div className={`text-center`}>{color}</div>
+        </div>
+        {showColorPicker && (
+          <ChromePicker
+            color={color}
+            onChange={(updatedColor) => setColor(updatedColor.hex)}
+          />
+        )}
+        <div
+          onClick={() => {
+            setShowBackgroundColorPicker(
+              (prevShowBackgroundColorPicker: any) =>
+                !prevShowBackgroundColorPicker
+            );
+          }}
+          className={`px-0 py-2 mb-2 bg-slate-800 text-white w-28 rounded shadow-lg shadow-slate-900 text-center border border-slate-900`}
+        >
           <div className={`text-center`}>BG Color</div>
           <div className={`text-center`}>{backgroundColor}</div>
         </div>
-        <div className={`px-0 py-2 mb-2 bg-slate-800 text-white w-28 rounded`}>
+        {showBackgroundColorPicker && (
+          <ChromePicker
+            color={backgroundColor}
+            onChange={(updatedColor) => setBackgroundColor(updatedColor.hex)}
+          />
+        )}
+        <div
+          className={`px-0 py-2 mb-2 bg-slate-800 text-white w-28 rounded shadow-lg shadow-slate-900 text-center border border-slate-900`}
+        >
           <div className={`text-center`}>Zoom Level</div>
           <div className={`text-center`}>{zoom}</div>
         </div>
-        <div className={`px-0 py-2 mb-2 bg-slate-800 text-white w-28 rounded`}>
+        <div
+          className={`px-0 py-2 mb-2 bg-slate-800 text-white w-28 rounded shadow-lg shadow-slate-900 text-center border border-slate-900`}
+        >
           <div className={`text-center`}>Image Format</div>
           <div className={`text-center`}>
             {String(imageFormat).toUpperCase()}
           </div>
         </div>
       </div>
-
-      {!showSettings ? (
-        <div
-          className={`absolute right-0 bottom-4 z-40 font-bold px-0 py-2 mb-2 bg-slate-800 text-white w-10 rounded-l text-center text-lg`}
-          onClick={() => {
-            console.log("ok");
-            setShowSettings(true);
-          }}
-        >
-          <button type={`button`}>
-            <IoIosArrowBack />
-          </button>
-        </div>
-      ) : null}
-
       <div
         className={`absolute m-2 w-28 right-0 top-0 h-screen flex flex-col justify-start items-center`}
       >
         <div
-          className={`px-0 py-2 mb-2 bg-slate-800 text-white w-28 rounded text-center text-lg`}
+          className={`px-0 py-2 mb-2 bg-slate-800 text-white w-28 rounded shadow-lg shadow-slate-900 text-center border border-slate-900`}
         >
           <button type={`button`} onClick={handleUndo}>
             <FaUndo />
           </button>
         </div>
         <div
-          className={`px-0 py-2 mb-2 bg-slate-800 text-white w-28 rounded text-center text-lg`}
+          className={`px-0 py-2 mb-2 bg-slate-800 text-white w-28 rounded shadow-lg shadow-slate-900 text-center border border-slate-900`}
         >
           <button type={`button`} onClick={handleRedo}>
             <FaRedo />
           </button>
         </div>
         <div
-          className={`px-0 py-2 mb-2 bg-slate-800 text-white w-28 rounded text-center text-lg`}
+          className={`px-0 py-2 mb-2 bg-slate-800 text-white w-28 rounded shadow-lg shadow-slate-900 text-center border border-slate-900`}
         >
           <button type={`button`} onClick={handleZoomIn}>
             <FaSearchPlus />
           </button>
         </div>
         <div
-          className={`px-0 py-2 mb-2 bg-slate-800 text-white w-28 rounded text-center text-lg`}
+          className={`px-0 py-2 mb-2 bg-slate-800 text-white w-28 rounded shadow-lg shadow-slate-900 text-center border border-slate-900`}
         >
           <button type={`button`} onClick={handleZoomOut}>
             <FaSearchMinus />
           </button>
         </div>
         <div
-          className={`px-0 py-2 mb-2 bg-slate-800 text-white w-28 rounded text-center text-lg`}
+          className={`px-0 py-2 mb-2 bg-slate-800 text-white w-28 rounded shadow-lg shadow-slate-900 text-center border border-slate-900`}
         >
           <button
             onClick={() => {
@@ -295,36 +306,34 @@ const DogFacts = () => {
           </button>
         </div>
         <div
-          className={`px-0 py-2 mb-2 bg-slate-800 text-white w-28 rounded text-center text-lg`}
+          className={`px-0 py-2 mb-2 bg-slate-800 text-white w-28 rounded shadow-lg shadow-slate-900 text-center border border-slate-900`}
         >
           <button type={`button`} onClick={generateFact}>
             <FaLightbulb />
           </button>
         </div>
         <div
-          className={`px-0 py-2 mb-2 bg-slate-800 text-white w-28 rounded text-center text-lg`}
+          className={`px-0 py-2 mb-2 bg-slate-800 text-white w-28 rounded shadow-lg shadow-slate-900 text-center border border-slate-900`}
         >
           <button type={`button`} onClick={() => setText(fact)}>
             <RxReset />
           </button>
         </div>
+      </div>
+
+      {!showSettings ? (
         <div
-          className={`px-0 py-2 mb-2 bg-slate-800 text-white w-28 rounded text-center text-lg`}
+          className={`absolute right-0 bottom-4 z-10 font-bold px-0 py-2 mb-2 bg-slate-800 text-white w-12 rounded-l shadow-slate-900 text-center border-2 border-slate-900`}
           onClick={() => {
-            setShowColorPicker((prevShowColorPicker) => !prevShowColorPicker);
+            setShowSettings(true);
           }}
         >
-          <button type={`button`} onClick={() => setText(fact)}>
-            <AiOutlineBgColors />
+          <button type={`button`}>
+            <IoIosArrowBack />
           </button>
         </div>
-        {showColorPicker && (
-          <ChromePicker
-            color={backgroundColor}
-            onChange={(updatedColor) => setBackgroundColor(updatedColor.hex)}
-          />
-        )}
-      </div>
+      ) : null}
+
       {showSettings ? (
         <div
           className={`bg-slate-900 w-1/3 absolute right-0 top-0 h-screen rounded-l`}
@@ -333,7 +342,6 @@ const DogFacts = () => {
             <div
               className={`text-slate-900 bg-white w-max p-2 rounded text-2xl `}
               onClick={() => {
-                console.log("ok");
                 setShowSettings(false);
               }}
             >
@@ -354,14 +362,17 @@ const DogFacts = () => {
                 className={`inline w-max p-2 rounded text-gray-800 bg-white focus:text-gray-800 focus:bg-white`}
                 type={`button`}
                 onClick={() => {
-                  setShowColorPicker(
-                    (prevShowColorPicker) => !prevShowColorPicker
+                  setShowBackgroundColorPicker(
+                    (prevShowBackgroundColorPicker) =>
+                      !prevShowBackgroundColorPicker
                   );
                 }}
               >
-                {showColorPicker ? "Close Color Picker" : "Open Color Picker"}
+                {showBackgroundColorPicker
+                  ? "Close Color Picker"
+                  : "Open Color Picker"}
               </button>
-              {showColorPicker && (
+              {showBackgroundColorPicker && (
                 <ChromePicker
                   color={backgroundColor}
                   onChange={(updatedColor) =>
@@ -370,6 +381,20 @@ const DogFacts = () => {
                 />
               )}
             </div>
+            {/* <div className={`flex flex-col w-full px-6`}>
+              <label
+                htmlFor={`bg-color`}
+                className={`text-white font-semibold text-xl mb-2 d-inline`}
+              >
+                Color
+              </label>
+              <button
+                className={`inline w-max p-2 rounded text-gray-800 bg-white focus:text-gray-800 focus:bg-white`}
+                type={`button`}
+              >
+                {showColorPicker ? "Close Color Picker" : "Open Color Picker"}
+              </button>
+            </div> */}
             <div className={`flex flex-col w-full px-6`}>
               <label
                 className={`text-white font-semibold text-xl mb-2`}

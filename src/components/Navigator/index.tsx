@@ -22,8 +22,11 @@ const Navigator = () => {
   };
 
   useEffect(() => {
+    if (location.pathname === "/") {
+      navigate("/home");
+    }
     setCurrentRoute(location.pathname);
-  }, []);
+  }, [location]);
 
   return (
     <>

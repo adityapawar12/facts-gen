@@ -16,7 +16,7 @@ const NoMatch = () => {
           <img
             className={`w-1/2 sm:w-1/4 p-3 m-2`}
             src={pageNotFound}
-            alt="Page Not Found"
+            alt={`Page Not Found`}
           />
           <p className={`p-3 m-2 text-white font-semibold`}>
             Oops! Page Not Found
@@ -35,7 +35,7 @@ const NoMatch = () => {
           <img
             className={`w-1/2 sm:w-1/4 p-3 m-2`}
             src={pageNotFound}
-            alt="Page Not Found"
+            alt={`Page Not Found`}
           />
           <p className={`p-3 m-2 text-gray-800 font-semibold`}>
             Oops! Page Not Found

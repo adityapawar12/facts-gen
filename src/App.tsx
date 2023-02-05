@@ -7,7 +7,7 @@ const queryClient = new QueryClient();
 import styles from "./App.module.css";
 
 import Home from "./components/Home";
-import DogFacts from "./components/DogFacts";
+import FactsGenerator from "./components/FactsGenerator";
 import NoMatch from "./components/NoMatch";
 import { LightDarkProvider } from "./contexts/LightDark";
 
@@ -28,7 +28,7 @@ const App = () => {
           <Routes>
             <Route path={`/`} element={<Home />} />
             <Route path={`/home`} element={<Home />} />
-            <Route path={`/dog-facts`} element={<DogFacts />} />
+            <Route path={`/facts-generator`} element={<FactsGenerator />} />
 
             <Route path={`*`} element={<NoMatch />} />
           </Routes>

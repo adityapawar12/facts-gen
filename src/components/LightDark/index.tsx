@@ -10,14 +10,14 @@ const LightDark = () => {
         {!lightDarkContext?.lightDark.isDarkMode ? (
           <div
             onClick={() => lightDarkContext?.toggleLightDark()}
-            className="basis-1/2 text-center font-semibold text-3xl d-inline px-2 py-1 bg-gray-800 text-emerald-300 border-2 border-emerald-300 rounded-l-2xl"
+            className={`basis-1/2 text-center font-semibold text-3xl d-inline px-2 py-1 bg-gray-800 text-emerald-200 border-2 border-gray-800 rounded-l-2xl`}
           >
             <FaSun />
           </div>
         ) : (
           <div
             onClick={() => lightDarkContext?.toggleLightDark()}
-            className="basis-1/2 text-center font-semibold text-3xl d-inline px-2 py-1 bg-emerald-300 text-gray-800 rounded-l-2xl"
+            className={`basis-1/2 text-center font-semibold text-3xl d-inline px-2 py-1 bg-emerald-200 text-gray-800 rounded-l-2xl`}
           >
             <FaRegSun />
           </div>
@@ -25,14 +25,14 @@ const LightDark = () => {
         {lightDarkContext?.lightDark.isDarkMode ? (
           <div
             onClick={() => lightDarkContext?.toggleLightDark()}
-            className="basis-1/2 text-center font-semibold text-3xl d-inline px-2 py-1 bg-gray-800 text-emerald-300 border-2 border-emerald-300 rounded-r-2xl"
+            className={`basis-1/2 text-center font-semibold text-3xl d-inline px-2 py-1 bg-gray-800 text-emerald-200 border-2 border-emerald-200 rounded-r-2xl`}
           >
             <FaMoon />
           </div>
         ) : (
           <div
             onClick={() => lightDarkContext?.toggleLightDark()}
-            className="basis-1/2 text-center font-semibold text-3xl d-inline px-2 py-1 bg-emerald-300 text-gray-800 rounded-r-2xl"
+            className={`basis-1/2 text-center font-semibold text-3xl d-inline px-2 py-1 bg-emerald-200 text-gray-800 border-2 border-gray-800 rounded-r-2xl`}
           >
             <FaRegMoon />
           </div>

@@ -1,0 +1,32 @@
+.scrollLight {
+  background: white;
+  color: #1f2937;
+}
+.scrollLight::-webkit-scrollbar {
+  width: 10px;
+  color: red;
+}
+
+.scrollLight::-webkit-scrollbar-track {
+}
+
+.scrollLight::-webkit-scrollbar-thumb {
+  background: white;
+  border: 2px solid black;
+}
+.scrollDark {
+  background: #1f2937;
+  color: white;
+}
+.scrollDark::-webkit-scrollbar {
+  width: 10px;
+  color: red;
+}
+
+.scrollDark::-webkit-scrollbar-track {
+}
+
+.scrollDark::-webkit-scrollbar-thumb {
+  background: white;
+  border: 2px solid black;
+}
